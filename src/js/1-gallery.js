@@ -88,9 +88,10 @@ const imagesMarkup = images
 
 gallery.insertAdjacentHTML('afterbegin', imagesMarkup);
 
-const lightbox = new SimpleLightbox('.gallery a');
-lightbox.defaultOptions.captionDelay = 250;
-lightbox.defaultOptions.captionsData = 'alt';
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 console.log(lightbox);
 console.log(lightbox.defaultOptions.captionDelay);

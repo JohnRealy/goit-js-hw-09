@@ -4,11 +4,11 @@ const LS_KEY = 'feedback-form-state';
 
 let data = {};
 
-feedbackForm.addEventListener('input', handleFoo);
+feedbackForm.addEventListener('input', handleInput);
 
-function handleFoo(e) {
-  const email = feedbackForm.email.value;
-  const message = feedbackForm.message.value;
+function handleInput(e) {
+  const email = feedbackForm.email.value.trim();
+  const message = feedbackForm.message.value.trim();
   localStorage.setItem(LS_KEY, JSON.stringify({ email, message }));
 }
 
