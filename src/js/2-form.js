@@ -1,45 +1,41 @@
 const feedbackForm = document.querySelector('.feedback-form');
 
-const userData = {};
+const LS_KEY = 'feedback-form-state';
+
+let data = {};
 
 feedbackForm.addEventListener('input', handleFoo);
 
-const formState = {};
 function handleFoo(e) {
-  formState.email = feedbackForm.email.value;
-  formState.message = feedbackForm.message.value;
-  localStorage.setItem('feedback-form-state', JSON.stringify(formState));
-}
-
-function handleSubmit(event) {
-  event.preventDefault();
-  if (formState.email === undefined || formState.email.trim() === '') {
-    alert('Усі поля повинні бути заповненими');
-    return;
-  }
-  if (formState.message === undefined || formState.message.trim() === '') {
-    alert('Усі поля повинні бути заповненими');
-    return;
-  }
-  userData.email = formState.email;
-  userData.message = formState.message;
-  localStorage.removeItem('feedback-form-state');
-  feedbackForm.reset();
-  console.log(userData);
+  const email = feedbackForm.email.value;
+  const message = feedbackForm.message.value;
+  localStorage.setItem(LS_KEY, JSON.stringify({ email, message }));
 }
 
 feedbackForm.addEventListener('submit', handleSubmit);
 
-function resetFoo() {
-  if (localStorage.getItem('feedback-form-state') === null) {
+function handleSubmit(event) {
+  event.preventDefault();
+  const submitData = JSON.parse(localStorage.getItem(LS_KEY)) ?? {};
+  const isUndefinded =
+    submitData.email === undefined || submitData.message === undefined;
+  const isEmpty = submitData.email === '' || submitData.message === '';
+  if (isUndefinded || isEmpty) {
+    alert('Заповніть усі поля');
     return;
   }
-  feedbackForm.email.value = JSON.parse(
-    localStorage.getItem('feedback-form-state')
-  ).email.trim();
-  feedbackForm.message.value = JSON.parse(
-    localStorage.getItem('feedback-form-state')
-  ).message.trim();
+  const email = submitData.email;
+  const message = submitData.message;
+  localStorage.removeItem(LS_KEY);
+  feedbackForm.reset();
+  console.log({ email, message });
 }
 
-resetFoo();
+const jsn = localStorage.getItem(LS_KEY) ?? '';
+try {
+  data = JSON.parse(jsn);
+  feedbackForm.email.value = data.email.trim();
+  feedbackForm.message.value = data.message.trim();
+} catch {
+  console.log('Усі поля повинні бути заповненими');
+}
